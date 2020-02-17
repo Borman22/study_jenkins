@@ -1,26 +1,34 @@
-#!groovy
-properties([disableConcurrentBuilds()])
-
 pipeline {
-    agent { 
-        label 'master'
+    agent {
+        docker {
+            image 'maven:3-alpine'
+            args '-v /root/.m2:/root/.m2'
         }
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-        timestamps()
     }
+
+
     stages {
-        stage("First step") {
+        stage('Clone') {
             steps {
-                echo "=================== build ==================="
-                sh 'mvn build'
+                echo "=================== Clone ==================="
+                git 'https://github.com/Borman22/study_jenkins.git'
             }
         }
-        stage("Second step") {
+
+        stage('Compile') {
             steps {
-                echo "=================== test ==================="
-                sh 'mvn build test'
+                echo "=================== Compile ==================="
+                sh "mvn clean compile"
             }
+        }
+
+        stage('Test') {
+            steps {
+                echo "=================== Test ==================="
+                sh 'mvn test'
+            }
+
+
         }
     }
 }
