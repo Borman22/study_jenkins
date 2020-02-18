@@ -23,6 +23,7 @@ public class Main {
 //                .config("spark.es.port","9200")
                 .getOrCreate();    // Spark Session
 
+        spark.conf().set("spark.driver.memory", "1g");
         spark.conf().set("spark.sql.shuffle.partitions", "5");                                          // reduce amount of partitions to 5
         spark.conf().set("spark.sql.streaming.schemaInference", true);                                  // turn on the schema inference in stream mode
         Logger.getRootLogger().setLevel(Level.ERROR);                                                   // In order to reduce number of messages in the console
